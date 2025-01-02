@@ -1,6 +1,6 @@
 {
     "name": "@andre-hctulc/dotenv-templates",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Create dotenv templates from .env files",
     "main": "dist/index.js",
     "type": "module",
