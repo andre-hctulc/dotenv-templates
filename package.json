@@ -8,7 +8,8 @@
     "scripts": {
         "build": "tsc",
         "tc": "tsc --noEmit",
-        "tc:watch": "tsc -w --noEmit"
+        "tc:watch": "tsc -w --noEmit",
+        "test": "tsx src/index.ts"
     },
     "author": "André Thomas",
     "license": "MIT",

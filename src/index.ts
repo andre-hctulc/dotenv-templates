@@ -10,7 +10,7 @@ function transformPath(path: string) {
     }
 
     const lastI = path.lastIndexOf(".");
-    return path.substring(0, lastI) + ".template" + path.substring(lastI);
+    return path.substring(0, lastI) + ".template.env";
 }
 
 function removeValues(text: string) {
@@ -22,7 +22,14 @@ function removeValues(text: string) {
             return;
         }
 
+        const commentI = line.indexOf("#");
         const i = line.indexOf("=");
+
+        // If the comment is before the '=', keep the line as is
+        if (commentI !== -1 && (i === -1 || commentI < i)) {
+            newLines.push(line);
+            return;
+        }
 
         if (i === -1) {
             newLines.push(line);
@@ -39,7 +46,7 @@ function removeValues(text: string) {
 program.name("dotenv-templates").description("Create dotenv templates from .env files").version("0.1.0");
 
 program
-    .option("-i, --include [patterns...]", "Include patterns", ["./**/*.env"])
+    .option("-i, --include [patterns...]", "Include patterns", ["./**/*.env", "./**/.env"])
     .option("-e, --exclude [patterns...]", "Exclude patterns")
     .action(async (opts) => {
         const excludePatterns = opts.exclude || [];
@@ -49,7 +56,7 @@ program
 
         await Promise.all(
             files.map(async (file) => {
-                if (!file.endsWith(".env")) {
+                if (!file.endsWith(".env") || file.endsWith(".template.env")) {
                     return;
                 }
 
@@ -62,7 +69,11 @@ program
             })
         );
 
-        console.log("✅ Created Files:");
+        if (createdFiles.length) {
+            console.log("✅ Created Templates:");
+        } else {
+            console.log("No .env files found");
+        }
 
         createdFiles.forEach((file) => {
             console.log(file);
