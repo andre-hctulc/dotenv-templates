@@ -3,15 +3,7 @@
 import { program } from "commander";
 import { promises } from "fs";
 import { glob } from "glob";
-
-function transformPath(path: string) {
-    if (!path.endsWith(".env")) {
-        throw new Error("Not a .env file");
-    }
-
-    const lastI = path.lastIndexOf(".");
-    return path.substring(0, lastI) + ".template.env";
-}
+import { basename } from "path";
 
 function removeValues(text: string) {
     const newLines: string[] = [];
@@ -46,7 +38,7 @@ function removeValues(text: string) {
 program.name("dotenv-templates").description("Create dotenv templates from .env files").version("0.1.0");
 
 program
-    .option("-i, --include [patterns...]", "Include patterns", ["./**/*.env", "./**/.env"])
+    .option("-i, --include [patterns...]", "Include patterns", ["./**/.env", "./**/.env.*"])
     .option("-e, --exclude [patterns...]", "Exclude patterns")
     .action(async (opts) => {
         const excludePatterns = opts.exclude || [];
@@ -55,13 +47,15 @@ program
         const createdFiles: string[] = [];
 
         await Promise.all(
-            files.map(async (file) => {
-                if (!file.endsWith(".env") || file.endsWith(".template.env")) {
+            files.map(async (filePath) => {
+                const fileName = basename(filePath);
+
+                if (!fileName.startsWith(".env") || fileName.endsWith(".template")) {
                     return;
                 }
 
-                const newPath = transformPath(file);
-                const text = await promises.readFile(file, "utf-8");
+                const newPath = filePath + ".template";
+                const text = await promises.readFile(filePath, "utf-8");
 
                 await promises.writeFile(newPath, removeValues(text), "utf-8");
 
