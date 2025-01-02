@@ -1,2 +1,3 @@
 # dotenv-templates
-Create .env template files from existing .env files.
+
+Create dotenv templates from .env files

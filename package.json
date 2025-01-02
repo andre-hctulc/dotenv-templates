@@ -1,0 +1,27 @@
+{
+    "name": "@andre-hctulc/dotenv-templates",
+    "version": "0.0.1",
+    "description": "Create dotenv templates from .env files",
+    "main": "dist/index.js",
+    "type": "module",
+    "scripts": {
+        "build": "tsc",
+        "tc": "tsc --noEmit",
+        "tc:watch": "tsc -w --noEmit",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "deploy": "npm run tc && npm publish"
+    },
+    "author": "André Thomas",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/node": "^22.5.5"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/andre-hctulc/xfetch.git"
+    },
+    "dependencies": {
+        "commander": "^13.0.0",
+        "glob": "^11.0.0"
+    }
+}
